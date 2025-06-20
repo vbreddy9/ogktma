@@ -185,7 +185,4 @@ app.post('/api/register', async (req, res) => {
 app.get('/api/test', (req, res) => {
   res.send('OGKTMA Backend is running 🎉');
 });
-
-app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
-});
+module.exports = app;
