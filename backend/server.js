@@ -125,11 +125,19 @@ const generatePDF = async (formData, totalAmount) => {
 };
 
 app.post('/register', async (req, res) => {
+  console.log('✅ /register endpoint hit');
+
   const formData = req.body;
 
   if (!formData.firstName || !formData.email) {
-    return res.status(400).json({ success: false, message: 'Missing required fields: firstName and email.' });
+    console.log('❌ Missing required fields');
+    return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
+
+  console.log('📝 Received form data for:', formData.email);
+
+  // Continue with your PDF/email logic
+
 
   const cleanEmail = formData.email.trim().toLowerCase();
   const membershipAmount = membershipPrices[formData.membershipType] || 0;
