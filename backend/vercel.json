@@ -5,13 +5,8 @@
     { "src": "build/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/home", "dest": "/server.js" },
-    { "src": "/home/send-email", "dest": "/server.js" },
-
+    { "src": "/api/.*", "dest": "/server.js" },       // ✅ Add this line
     { "handle": "filesystem" },
-    {
-      "src": "/(.*)",
-      "dest": "/build/index.html"
-    }
+    { "src": "/(.*)", "dest": "/build/index.html" }
   ]
 }
