@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 4000;
 
 const cors = require('cors');
 
-app.use(cors());
-app.use(bodyParser.json());
+const cors = require('cors');
+app.use(cors({ origin: '*' }));
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
