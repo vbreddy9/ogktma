@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
@@ -12,6 +11,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+const cors = require('cors');
 
 app.use(cors({
   origin: 'https://ogktma-frontend.vercel.app',
