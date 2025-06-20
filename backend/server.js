@@ -210,7 +210,7 @@ OGKTMA Team
     res.status(500).json({ success: false, message: 'Submission failed. Try again later.' });
   }
 });
-app.get('/home', (req, res) => {
+app.get('/api/test', (req, res) => {
   res.send('OGKTMA Backend is running 🎉');
 });
 
