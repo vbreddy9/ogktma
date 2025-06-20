@@ -84,6 +84,7 @@ const MemberRegistrationForm = () => {
 
     try {
       const response = await fetch('https://ogktma-backend.vercel.app/api/register', {
+        console.log('✅ Incoming POST /api/register:', req.body); 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
