@@ -7,6 +7,8 @@ const PDFDocument = require('pdfkit');
 const QRCode = require('qrcode');
 const fs = require('fs');
 const path = require('path');
+const os = require('os'); 
+
 
 dotenv.config();
 
@@ -42,9 +44,9 @@ const generatePDF = async (formData, totalAmount) => {
   return new Promise(async (resolve, reject) => {
     const doc = new PDFDocument({ margin: 40 });
     const filename = `PaymentDetails_${Date.now()}.pdf`;
-    const pdfDir = path.join(__dirname, 'pdfs');
-    if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
-    const filePath = path.join(pdfDir, filename);
+    const os = require('os');
+    const filePath = path.join(os.tmpdir(), filename);
+
 
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
