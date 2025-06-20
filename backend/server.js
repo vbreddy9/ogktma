@@ -44,7 +44,6 @@ const generatePDF = async (formData, totalAmount) => {
   return new Promise(async (resolve, reject) => {
     const doc = new PDFDocument({ margin: 40 });
     const filename = `PaymentDetails_${Date.now()}.pdf`;
-    const os = require('os');
     const filePath = path.join(os.tmpdir(), filename);
 
 
@@ -179,8 +178,8 @@ app.get('/', (req, res) => {
   res.send('OGKTMA Backend Root is live ✅');
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const serverless = require('serverless-http');
+module.exports = serverless(app);
+
 
 
