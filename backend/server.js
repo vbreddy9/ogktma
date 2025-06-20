@@ -134,26 +134,16 @@ app.post('/register', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
-  console.log('📝 Received form data for:', formData.email);
-
-  // Continue with your PDF/email logic
-
-
   const cleanEmail = formData.email.trim().toLowerCase();
-  const membershipAmount = membershipPrices[formData.membershipType] || 0;
   const donationAmount = parseFloat(formData.donation) || 0;
-  const totalAmount = membershipAmount + donationAmount;
 
-  // ✅ Respond immediately to frontend
+  // ✅ Respond to frontend immediately
   res.status(200).json({
     success: true,
-    message: 'Form submitted successfully. PDF and confirmation email will be sent shortly.'
+    message: 'Form submitted successfully. Email will be sent shortly.'
   });
 
-  // 🕓 Continue email + PDF generation in background
   try {
-    const pdfPath = await generatePDF(formData, totalAmount);
-
     const mailOptions = {
       from: 'info@vr2tech.in',
       to: [cleanEmail, 'info@ogktma.org'],
@@ -162,42 +152,24 @@ app.post('/register', async (req, res) => {
         <div style="font-family: Arial, sans-serif; font-size: 15px; color: #333;">
           <p>Dear <strong>${formData.firstName}</strong>,</p>
           <p>Thank you for registering for the <strong>OGKTMA Convention 2025</strong>.</p>
-          <p><strong>Here is a summary of your submitted information:</strong></p>
+          <p><strong>Summary:</strong></p>
           <ul>
             <li><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</li>
             <li><strong>Email:</strong> ${cleanEmail}</li>
             <li><strong>Phone:</strong> ${formData.phone}</li>
             <li><strong>Membership Type:</strong> ${formData.membershipType}</li>
             <li><strong>Donation:</strong> $${donationAmount}</li>
-            <li><strong>Total Payable:</strong> $${totalAmount}</li>
           </ul>
-          <p>Please find the attached PDF for full confirmation details.</p>
-          <p style="margin-top: 20px;">
-            For more details, feel free to call us at
-            <a href="tel:+12345678900" style="color: #1a73e8; text-decoration: none;">+1-234-567-8900</a>
-          </p>
-          <p>Regards,<br/>OGKTMA Team</p>
+          <p>We will contact you with further details shortly.</p>
+          <p>Warm regards,<br/>OGKTMA Team</p>
         </div>
-      `,
-      attachments: [
-        {
-          filename: 'PaymentDetails.pdf',
-          path: pdfPath
-        }
-      ]
+      `
     };
 
     await transporter.sendMail(mailOptions);
-
-    // ⏱ Cleanup after 10 seconds
-    setTimeout(() => {
-      if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-    }, 10000);
-
-    console.log(`✅ Email sent and PDF cleaned up for ${cleanEmail}`);
+    console.log(`📧 Email sent to ${cleanEmail}`);
   } catch (error) {
-    console.error('❌ Background processing failed:', error);
-    // Optionally: log to external service or email admin
+    console.error('❌ Email sending failed:', error);
   }
 });
 
