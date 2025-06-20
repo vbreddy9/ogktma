@@ -1,6 +1,5 @@
 // server.js
 const express = require('express');
-const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
@@ -183,7 +182,10 @@ app.post('/register', async (req, res) => {
   }
 });
 
-app.get('/test', (req, res) => {
-  res.send('OGKTMA Backend is running 🎉');
+app.get('/', (req, res) => {
+  res.send('OGKTMA Backend Root is live ✅');
 });
+
+const serverless = require('serverless-http');
 module.exports = serverless(app);
+
