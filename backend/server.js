@@ -152,8 +152,8 @@ app.post('/api/register', async (req, res) => {
     const pdfPath = await generatePDF(formData, totalAmount);
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: [cleanEmail, process.env.ADMIN_EMAIL || 'info@ogktma.org'],
+      from: 'info@vr2tech.in',
+      to: [cleanEmail,'info@ogktma.org'],
       subject: 'OGKTMA Member Registration Confirmation',
       text: `
 Dear ${formData.firstName},
