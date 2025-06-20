@@ -17,7 +17,7 @@ const cors = require('cors');
 app.use(cors({
   origin: 'https://ogktma-frontend.vercel.app',
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 
