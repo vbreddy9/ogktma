@@ -19,8 +19,8 @@ app.use(bodyParser.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.ADMIN_EMAIL,
-    pass: process.env.EMAIL_PASS
+    user: 'info@vr2tech.in',
+    pass: 'ubrdxgraugotinxz'
   }
 });
 
