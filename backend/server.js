@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
@@ -13,13 +14,12 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const cors = require('cors');
-
 app.use(cors({
   origin: 'https://ogktma-frontend.vercel.app',
-  methods: ['GET', 'POST', 'OPTIONS'], // allow preflight
-  allowedHeaders: ['Content-Type'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 }));
-
+app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -50,13 +50,11 @@ const generatePDF = async (formData, totalAmount) => {
     doc.pipe(stream);
 
     const logoPath = path.join(__dirname, 'assets', 'ogktma-logo.png');
-      if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 40, 30, { width: 60 }); // top-left logo
-      }
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 40, 30, { width: 60 });
+    }
 
-      doc.fontSize(14)
-        .font('Helvetica-Bold')
-        .text('OGKTMA Convention - Member Registration', 120, 45); // right-aligned to logo
+    doc.fontSize(14).font('Helvetica-Bold').text('OGKTMA Convention - Member Registration', 120, 45);
 
     const details = [
       ['Full Name', `${formData.firstName} ${formData.lastName}`],
@@ -75,20 +73,14 @@ const generatePDF = async (formData, totalAmount) => {
       ['Total Payable', `$${totalAmount}`]
     ];
 
-    const x = 40;
-    let y = 120;
-    const rowHeight = 18;
-    const col1Width = 160;
-    const col2Width = 330;
-
+    let x = 40, y = 120;
+    const rowHeight = 18, col1Width = 160, col2Width = 330;
     doc.fontSize(9);
     details.forEach(([label, value]) => {
       doc.rect(x, y, col1Width, rowHeight).stroke();
-      doc.text(label, x + 5, y + 5, { width: col1Width - 10 });
-
+      doc.text(label, x + 5, y + 5);
       doc.rect(x + col1Width, y, col2Width, rowHeight).stroke();
-      doc.text(value, x + col1Width + 5, y + 5, { width: col2Width - 10 });
-
+      doc.text(value, x + col1Width + 5, y + 5);
       y += rowHeight;
     });
 
@@ -112,17 +104,17 @@ const generatePDF = async (formData, totalAmount) => {
 
     y += 115;
     doc.fontSize(8).text(
-      'Note: Please bring the PDF hard copy from your mail and submit it at the event entry. This will serve as your boarding pass for the event.',
+      'Note: Please bring the PDF hard copy from your mail and submit it at the event entry. This will serve as your boarding pass.',
       x,
       y,
       { align: 'center' }
     );
-    // Signature section
-      const signaturePath = path.join(__dirname, 'assets', 'sign.png');
-      if (fs.existsSync(signaturePath)) {
-        doc.image(signaturePath, doc.page.width - 150, y + 30, { width: 100 });
-        doc.fontSize(9).text('Authorized by OGKTMA', doc.page.width - 150, y + 70);
-      }
+
+    const signaturePath = path.join(__dirname, 'assets', 'sign.png');
+    if (fs.existsSync(signaturePath)) {
+      doc.image(signaturePath, doc.page.width - 150, y + 30, { width: 100 });
+      doc.fontSize(9).text('Authorized by OGKTMA', doc.page.width - 150, y + 70);
+    }
 
     doc.end();
     stream.on('finish', () => resolve(filePath));
@@ -132,14 +124,8 @@ const generatePDF = async (formData, totalAmount) => {
 
 app.post('/api/register', async (req, res) => {
   const formData = req.body;
-
   if (!formData.firstName || !formData.email) {
     return res.status(400).json({ success: false, message: 'Missing required fields: firstName and email.' });
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(formData.email)) {
-    return res.status(400).json({ success: false, message: 'Invalid email format.' });
   }
 
   const cleanEmail = formData.email.trim().toLowerCase();
@@ -152,28 +138,8 @@ app.post('/api/register', async (req, res) => {
 
     const mailOptions = {
       from: 'info@vr2tech.in',
-      to: [cleanEmail,'info@ogktma.org'],
+      to: [cleanEmail, 'info@ogktma.org'],
       subject: 'OGKTMA Member Registration Confirmation',
-      text: `
-Dear ${formData.firstName},
-
-Thank you for registering for the OGKTMA Convention 2025.
-
-Here is a summary of your submitted information:
-- Name: ${formData.firstName} ${formData.lastName}
-- Email: ${cleanEmail}
-- Phone: ${formData.phone}
-- Membership Type: ${formData.membershipType}
-- Donation: $${donationAmount}
-- Total Payable: $${totalAmount}
-
-Please find the attached PDF for full confirmation details.
-
-For more details, feel free to call us at +1-234-567-8900
-
-Regards,  
-OGKTMA Team
-      `,
       html: `
         <div style="font-family: Arial, sans-serif; font-size: 15px; color: #333;">
           <p>Dear <strong>${formData.firstName}</strong>,</p>
@@ -215,6 +181,7 @@ OGKTMA Team
     res.status(500).json({ success: false, message: 'Submission failed. Try again later.' });
   }
 });
+
 app.get('/api/test', (req, res) => {
   res.send('OGKTMA Backend is running 🎉');
 });
