@@ -14,12 +14,7 @@ const PORT = process.env.PORT || 4000;
 
 const cors = require('cors');
 
-app.use(cors({
-  origin: 'https://ogktma-frontend.vercel.app',
-  methods: ['GET', 'POST'],
-  credentials: true
-}));
-
+app.use(cors());
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
