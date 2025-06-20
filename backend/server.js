@@ -122,65 +122,10 @@ const generatePDF = async (formData, totalAmount) => {
   });
 };
 
-app.post('/register', async (req, res) => {
-  const formData = req.body;
-  if (!formData.firstName || !formData.email) {
-    return res.status(400).json({ success: false, message: 'Missing required fields: firstName and email.' });
-  }
-
-  const cleanEmail = formData.email.trim().toLowerCase();
-  const membershipAmount = membershipPrices[formData.membershipType] || 0;
-  const donationAmount = parseFloat(formData.donation) || 0;
-  const totalAmount = membershipAmount + donationAmount;
-
-  try {
-    const pdfPath = await generatePDF(formData, totalAmount);
-
-    const mailOptions = {
-      from: 'info@vr2tech.in',
-      to: [cleanEmail, 'info@ogktma.org'],
-      subject: 'OGKTMA Member Registration Confirmation',
-      html: `
-        <div style="font-family: Arial, sans-serif; font-size: 15px; color: #333;">
-          <p>Dear <strong>${formData.firstName}</strong>,</p>
-          <p>Thank you for registering for the <strong>OGKTMA Convention 2025</strong>.</p>
-          <p><strong>Here is a summary of your submitted information:</strong></p>
-          <ul>
-            <li><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</li>
-            <li><strong>Email:</strong> ${cleanEmail}</li>
-            <li><strong>Phone:</strong> ${formData.phone}</li>
-            <li><strong>Membership Type:</strong> ${formData.membershipType}</li>
-            <li><strong>Donation:</strong> $${donationAmount}</li>
-            <li><strong>Total Payable:</strong> $${totalAmount}</li>
-          </ul>
-          <p>Please find the attached PDF for full confirmation details.</p>
-          <p style="margin-top: 20px;">
-            For more details, feel free to call us at
-            <a href="tel:+12345678900" style="color: #1a73e8; text-decoration: none;">+1-234-567-8900</a>
-          </p>
-          <p>Regards,<br/>OGKTMA Team</p>
-        </div>
-      `,
-      attachments: [
-        {
-          filename: 'PaymentDetails.pdf',
-          path: pdfPath
-        }
-      ]
-    };
-
-    await transporter.sendMail(mailOptions);
-
-    setTimeout(() => {
-      if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-    }, 10000);
-
-    res.status(200).json({ success: true, message: 'Form submitted and email sent successfully!' });
-  } catch (error) {
-    console.error('❌ Email sending error:', error);
-    res.status(500).json({ success: false, message: 'Submission failed. Try again later.' });
-  }
+app.post('/register', (req, res) => {
+  res.status(200).json({ success: true, message: 'Register endpoint hit successfully ✅' });
 });
+
 
 app.get('/', (req, res) => {
   res.send('OGKTMA Backend Root is live ✅');
