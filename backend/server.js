@@ -13,7 +13,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const cors = require('cors');
-app.use(cors({ origin: 'https://ogktma-frontend.vercel.app' }));
+
+app.use(cors({
+  origin: 'https://ogktma-frontend.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS'], // allow preflight
+  allowedHeaders: ['Content-Type'],
+}));
+
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
