@@ -122,7 +122,7 @@ const generatePDF = async (formData, totalAmount) => {
   });
 };
 
-app.post('/api/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   const formData = req.body;
   if (!formData.firstName || !formData.email) {
     return res.status(400).json({ success: false, message: 'Missing required fields: firstName and email.' });
@@ -182,7 +182,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-app.get('/api/test', (req, res) => {
+app.get('/test', (req, res) => {
   res.send('OGKTMA Backend is running 🎉');
 });
 module.exports = app;
