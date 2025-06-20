@@ -136,12 +136,6 @@ app.post('/register', async (req, res) => {
   const cleanEmail = formData.email.trim().toLowerCase();
   const donationAmount = parseFloat(formData.donation) || 0;
 
-  // ✅ Respond to frontend immediately
-  res.status(200).json({
-    success: true,
-    message: 'Form submitted successfully. Email will be sent shortly.'
-  });
-
   try {
     const mailOptions = {
       from: 'info@vr2tech.in',
@@ -167,8 +161,11 @@ app.post('/register', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     console.log(`📧 Email sent to ${cleanEmail}`);
+
+    res.status(200).json({ success: true, message: 'Email sent successfully.' });
   } catch (error) {
     console.error('❌ Email sending failed:', error);
+    res.status(500).json({ success: false, message: 'Email sending failed.' });
   }
 });
 
