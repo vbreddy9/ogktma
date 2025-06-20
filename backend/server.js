@@ -186,6 +186,8 @@ app.get('/', (req, res) => {
   res.send('OGKTMA Backend Root is live ✅');
 });
 
-const serverless = require('serverless-http');
-module.exports = serverless(app);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 
